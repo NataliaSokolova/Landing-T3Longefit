@@ -13,10 +13,10 @@ export default function AppleHeroSection() {
             style={{ minHeight: 220 }}
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30">
-            <div className="text-white text-3xl md:text-5xl font-bold text-center drop-shadow-lg mb-4">
+            <div className="text-white text-4xl md:text-6xl font-bold text-center drop-shadow-lg mb-4">
               <span className="inline-block align-middle mr-2"></span>Fitness+
             </div>
-            <div className="text-white text-2xl md:text-4xl font-bold text-center mb-6">
+            <div className="text-white text-3xl md:text-5xl font-bold text-center mb-6">
               Fitness for everyone.<br />Fitness for you.
             </div>
             <a
