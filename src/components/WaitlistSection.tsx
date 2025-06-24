@@ -1,71 +1,168 @@
-import React, { useState } from "react";
+'use client'
 
-export default function AppleWaitlistSection() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState({ name: false, email: false, message: false });
+import { useState } from 'react'
+import { Box, Typography, Container, TextField, Button, Alert, Paper } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 
-  const validate = () => {
-    const newErrors = {
-      name: !form.name.trim(),
-      email: !form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email),
-      message: !form.message.trim(),
-    };
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(Boolean);
-  };
+export default function WaitlistSection() {
+  const theme = useTheme()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  })
+  const [confirmationMessage, setConfirmationMessage] = useState('')
+  const [errors, setErrors] = useState<{[key: string]: string}>({})
+
+  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: event.target.value
+    }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }))
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {}
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required'
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email'
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setSubmitted(true);
-    setForm({ name: '', email: '', message: '' });
-    setTimeout(() => setSubmitted(false), 6000);
-  };
+    e.preventDefault()
+    
+    if (!validateForm()) return
+    
+    // Show confirmation, clear form
+    setConfirmationMessage('Thank you for joining the waitlist!')
+    setFormData({ name: '', email: '', message: '' })
+    
+    setTimeout(() => {
+      setConfirmationMessage('')
+    }, 6000)
+  }
 
   return (
-    <section className="waitlist-section w-full flex justify-center py-16 bg-white" id="waitlist">
-      <div className="w-full max-w-xl rounded-[32px] bg-white px-6 md:px-12 py-12 flex flex-col items-center shadow-md">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#111] text-center mb-8">Want early access? Sign up to join our waitlist and help shape the future of personalized wellness.</h2>
-        <form className="waitlist-form flex flex-col gap-6 w-full" onSubmit={handleSubmit} autoComplete="off" noValidate>
-          <div>
-            <label htmlFor="name" className="font-semibold mb-2 block text-lg">Name *</label>
-            <input
-              id="name"
-              type="text"
-              className={`border-2 rounded-xl px-6 py-4 w-full bg-gray-50 focus:border-[#BBF246] transition text-lg ${errors.name ? 'border-red-500' : 'border-gray-200'}`}
-              value={form.name}
-              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+    <Box
+      component="section"
+      id="waitlist"
+      sx={{
+        py: { xs: 8, md: 12 },
+        backgroundColor: theme.palette.background.default,
+      }}
+    >
+      <Container maxWidth="md">
+        <Paper
+          elevation={0}
+          sx={{
+            p: { xs: 4, md: 6 },
+            borderRadius: 4,
+            border: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: 'center',
+              fontSize: { xs: '2rem', md: '2.5rem' },
+              fontWeight: 700,
+              mb: 4,
+              color: theme.palette.text.primary,
+            }}
+          >
+            Want early access? Sign up to join our waitlist and help shape the future of personalized wellness.
+          </Typography>
+          
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+            <TextField
+              fullWidth
+              label="Name *"
+              value={formData.name}
+              onChange={handleInputChange('name')}
+              error={!!errors.name}
+              helperText={errors.name}
+              sx={{ mb: 3 }}
             />
-          </div>
-          <div>
-            <label htmlFor="email" className="font-semibold mb-2 block text-lg">Email *</label>
-            <input
-              id="email"
+            
+            <TextField
+              fullWidth
+              label="Email *"
               type="email"
-              className={`border-2 rounded-xl px-6 py-4 w-full bg-gray-50 focus:border-[#BBF246] transition text-lg ${errors.email ? 'border-red-500' : 'border-gray-200'}`}
-              value={form.email}
-              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+              value={formData.email}
+              onChange={handleInputChange('email')}
+              error={!!errors.email}
+              helperText={errors.email}
+              sx={{ mb: 3 }}
             />
-          </div>
-          <div>
-            <label htmlFor="message" className="font-semibold mb-2 block text-lg">Message *</label>
-            <textarea
-              id="message"
+            
+            <TextField
+              fullWidth
+              label="Message *"
+              multiline
               rows={3}
-              className={`border-2 rounded-xl px-6 py-4 w-full bg-gray-50 focus:border-[#BBF246] transition text-lg ${errors.message ? 'border-red-500' : 'border-gray-200'}`}
-              value={form.message}
-              onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+              value={formData.message}
+              onChange={handleInputChange('message')}
+              error={!!errors.message}
+              helperText={errors.message}
+              sx={{ mb: 4 }}
             />
-          </div>
-          <button type="submit" className="bg-[#BBF246] text-[#222] rounded-full py-4 font-bold shadow hover:bg-[#d6fa7a] transition mt-2 text-xl">Join Waitlist</button>
-          {submitted && (
-            <div className="bg-[#eaffc2] rounded-xl py-4 mt-4 font-semibold text-[#222] shadow text-center animate-fadeIn">
-              Thank you for joining the waitlist!
-            </div>
-          )}
-        </form>
-      </div>
-    </section>
-  );
+            
+            <Box sx={{ textAlign: 'center' }}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                sx={{
+                  backgroundColor: theme.palette.secondary.main,
+                  color: theme.palette.text.primary,
+                  fontSize: '1.1rem',
+                  px: 4,
+                  py: 2,
+                  borderRadius: '12px',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  '&:hover': {
+                    backgroundColor: theme.palette.secondary.dark,
+                  },
+                }}
+              >
+                Join Waitlist
+              </Button>
+            </Box>
+            
+            {confirmationMessage && (
+              <Alert 
+                severity="success" 
+                sx={{ mt: 3 }}
+              >
+                {confirmationMessage}
+              </Alert>
+            )}
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
+  )
 } 

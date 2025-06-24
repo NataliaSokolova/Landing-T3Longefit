@@ -1,34 +1,122 @@
-import React from "react";
+'use client'
 
-export default function AppleHeroSection() {
+import { useRef, useEffect } from 'react'
+import Image from 'next/image'
+import { Box, Typography, Button, Container } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+
+export default function HeroSection() {
+  const heroImageRef = useRef<HTMLImageElement>(null)
+  const theme = useTheme()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroImageRef.current) {
+        const hero = document.getElementById('hero')
+        if (hero && window.scrollY < hero.offsetHeight) {
+          heroImageRef.current.style.transform = `translateY(${window.scrollY * 0.25}px) scale(1.04)`
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToWaitlist = () => {
+    document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <section className="relative w-full flex flex-col items-center justify-center bg-[#f5f5f7] pt-8 pb-20">
-      <div className="w-full max-w-7xl mx-auto rounded-[40px] overflow-hidden flex flex-col items-center bg-[#f5f5f7]">
-        <div className="w-full h-[340px] md:h-[480px] flex items-center justify-center relative">
-          {/* Можно заменить на <video> или <Image> */}
-          <img
-            src="/images/hero-fitness.jpg"
-            alt="Fitness+ Hero"
-            className="w-full h-full object-cover object-center rounded-[40px]"
-            style={{ minHeight: 220 }}
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30">
-            <div className="text-white text-4xl md:text-6xl font-bold text-center drop-shadow-lg mb-4">
-              <span className="inline-block align-middle mr-2"></span>Fitness+
-            </div>
-            <div className="text-white text-3xl md:text-5xl font-bold text-center mb-6">
-              Fitness for everyone.<br />Fitness for you.
-            </div>
-            <a
-              href="#"
-              className="inline-block rounded-full bg-[#bfff10] hover:bg-[#d6fa7a] px-8 py-3 text-lg font-medium text-black transition-colors duration-200 shadow"
-              style={{ boxShadow: "0 2px 8px 0 rgba(187,242,70,0.12)" }}
-            >
-              Try it free*
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+    <Box
+      component="section"
+      id="hero"
+      sx={{
+        position: 'relative',
+        height: '110vh',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        mx: { xs: 2, md: 10 },
+        my: 10,
+        borderRadius: '24px',
+        overflow: 'hidden',
+      }}
+    >
+      <Image
+        src="/hero.jpg"
+        alt="LongevFit Hero"
+        fill
+        style={{ objectFit: 'cover', objectPosition: 'center 130%' }}
+        sizes="100vw"
+        priority
+        ref={heroImageRef}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          // borderRadius: '24px',
+        }}
+      />
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            position: 'relative',
+            zIndex: 2,
+            textAlign: 'center',
+            color: 'white',
+            mb: 12,
+          }}
+        >
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: '2.7rem', md: '4.5rem' },
+              fontWeight: 700,
+              mb: 3,
+              lineHeight: 1.1,
+            }}
+          >
+            LongevFit — More Than Fitness
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              fontSize: { xs: '1.5rem', md: '2rem' },
+              fontWeight: 400,
+              mb: 4,
+              opacity: 0.9,
+            }}
+          >
+            Built for real people. For real life.
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={scrollToWaitlist}
+            sx={{
+              backgroundColor: theme.palette.secondary.main,
+              color: theme.palette.text.primary,
+              fontSize: '1.25rem',
+              px: 4,
+              py: 1.5,
+              borderRadius: '40px',
+              textTransform: 'none',
+              fontWeight: 600,
+              '&:hover': {
+                backgroundColor: theme.palette.secondary.dark,
+              },
+            }}
+          >
+            Join Waitlist
+          </Button>
+        </Box>
+      </Container>
+    </Box>
+  )
 } 

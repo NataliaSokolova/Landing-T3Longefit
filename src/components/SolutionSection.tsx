@@ -1,23 +1,97 @@
-import React from "react";
+'use client'
 
-export default function AppleSolutionSection() {
+import Image from 'next/image'
+import { Box, Typography, Container, Grid, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+
+const solutionFeatures = [
+  'Personalized fitness, nutrition, and recovery plans that adapt to your life.',
+  'Real-time adjustments based on your feedback, schedule, and progress.',
+  'Holistic approach: workouts, meals, sleep, stress, and more — all connected.',
+  'Guidance from real coaches and AI, so you\'re never alone.',
+  'Progress tracking that celebrates consistency, not just intensity.'
+]
+
+export default function SolutionSection() {
+  const theme = useTheme()
+
   return (
-    <section className="solution-section w-full flex justify-center py-16 bg-black" id="solution">
-      <div className="solution-content-wrapper flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-12 px-6 md:px-12 py-12">
-        <div className="solution-card bg-[#181818] rounded-[28px] shadow-2xl p-12 text-white max-w-md flex-1 flex flex-col justify-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">LongevFit is your AI-powered health companion</h2>
-          <ul className="list-disc list-inside text-xl text-gray-200 space-y-3 ml-2">
-            <li>Personalized fitness, nutrition, and recovery plans that adapt to your life.</li>
-            <li>Real-time adjustments based on your feedback, schedule, and progress.</li>
-            <li>Holistic approach: workouts, meals, sleep, stress, and more — all connected.</li>
-            <li>Guidance from real coaches and AI, so you're never alone.</li>
-            <li>Progress tracking that celebrates consistency, not just intensity.</li>
-          </ul>
-        </div>
-        <div className="solution-image flex-1 flex items-center justify-center min-w-[220px] max-w-xs">
-          <img src="/images/4582fcc01fbc443795404c60ae2a6ea2.png" alt="LongevFit iPhone Mockup" className="w-full max-w-xs rounded-[32px] shadow-2xl bg-[#222]" />
-        </div>
-      </div>
-    </section>
-  );
+    <Box
+      component="section"
+      id="solution"
+      sx={{
+        py: { xs: 8, md: 12 },
+        backgroundColor: theme.palette.grey[50],
+      }}
+    >
+      <Container maxWidth="lg">
+        <Grid container spacing={6} alignItems="center">
+          <Grid item xs={12} lg={6}>
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                fontWeight: 700,
+                mb: 4,
+                color: theme.palette.text.primary,
+              }}
+            >
+              LongevFit is your AI-powered health companion
+            </Typography>
+            
+            <List sx={{ py: 0 }}>
+              {solutionFeatures.map((feature, index) => (
+                <ListItem key={index} sx={{ px: 0, py: 1 }}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <CheckCircleIcon 
+                      sx={{ 
+                        color: theme.palette.secondary.main,
+                        fontSize: '1.5rem'
+                      }} 
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={feature}
+                    sx={{
+                      '& .MuiListItemText-primary': {
+                        fontSize: '1.1rem',
+                        lineHeight: 1.6,
+                        color: theme.palette.text.secondary,
+                      }
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          
+          <Grid item xs={12} lg={6}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Image
+                src="/images/4582fcc01fbc443795404c60ae2a6ea2.png"
+                alt="LongevFit iPhone Mockup"
+                width={320}
+                height={640}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: '320px',
+                  borderRadius: '32px',
+                  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.22)',
+                  background: '#222'
+                }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  )
 } 
