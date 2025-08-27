@@ -48,9 +48,9 @@ export default function ProblemSection() {
           Fitness that fits life — not the other way around
         </Typography>
         
-        <Grid container spacing={4}>
+        <Grid container columns={12} columnSpacing={4}>
           {problemCards.map((card, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid span={{ xs: 12, md: 4 }} key={index}>
               <Paper
                 elevation={0}
                 sx={{
@@ -71,20 +71,34 @@ export default function ProblemSection() {
                   sx={{
                     display: 'flex',
                     justifyContent: 'center',
+                    alignItems: 'center',
                     mb: 3,
                   }}
                 >
-                  <Image
-                    src={card.icon}
-                    alt={card.alt}
-                    width={56}
-                    height={56}
-                    style={{
-                      borderRadius: '12px',
-                      boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
-                      background: '#fff'
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #eaffc2 0%, #BBF246 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 8px 0 rgba(187,242,70,0.10)',
                     }}
-                  />
+                  >
+                    <Typography
+                      sx={{
+                        color: '#1d1d1f',
+                        fontWeight: 700,
+                        fontSize: '1.5rem',
+                        letterSpacing: '-1px',
+                        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+                      }}
+                    >
+                      LF
+                    </Typography>
+                  </Box>
                 </Box>
                 <Typography
                   variant="body1"
